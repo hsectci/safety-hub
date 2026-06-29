@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Thai Safety App</title>
+
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+body {
+  font-family: Arial;
+  margin: 0;
+  padding: 15px;
+  background: linear-gradient(180deg, #f5f7fb, #e9eef7);
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #1f2a44;
+}
+
+/* Base button */
+.btn {
+  width: 100%;
+  padding: 18px;
+  margin: 12px 0;
+  font-size: 20px;
+  background: white;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+}
+
+/* Click animation */
+.btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Category button */
+.category {
+  background: linear-gradient(135deg, #2C4AA5, #4A6FE3);
+  color: white;
+  font-weight: bold;
+}
+
+/* Word card */
+.word {
+  background: white;
+  text-align: left;
+  line-height: 1.5;
+  font-size: 18px;
+}
+
+/* Back button */
+#backBtn {
+  background: #333;
+  color: white;
+}
+
+/* Small label (for CN or extra text) */
+small {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+/* Audio player styling */
+audio {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+/* Hover effect (for tablet / desktop) */
+.btn:hover {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* Mobile feel improvement */
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
+</head>
+
+<body>
+<h1>Safety Commands Hub </h1>
+<div id="app"></div>
+
+<script>
+const data = [
+  { cat: "ppe", en: "英文: Wear your safety helmet", th: "泰文: ใส่หมวกด้วย", cn: "中文: 請戴安全帽", pn: "Pinyin: sai (帶) muak (帽子) duay" , audio: "helmet.mp3" },
+  { cat: "ppe", en: "英文: Wear your safey harness", th: "泰文: ใส่เข็มขัดนิรภัยด้วย", cn: "中文: 請配戴安全帶",pn: "Pinyin: sai (帶) khem-khat (帶子) ni-ra-phai (安全)duay" , audio: "safety_harness.mp3" },
+  { cat: "emergency", en: "英文: Get down now, it is not safe", th: "泰文: ลงมามันอันตราย", cn: "中文: 下來! 很危險", pn: "Pinyin: long-ma (下來) man an-ta-rai (危險)" , audio: "dangerous.mp3" }
+
+];
+
+const categories = [
+  { key: "ppe", name: "PPE" },
+  { key: "lifting", name: "Lifting (吊運)" },
+  { key: "emergency", name: "Emergency (指示)" }
+];
+
+const app = document.getElementById("app");
+
+function showCategories() {
+  app.innerHTML = "<h2>Categories</h2>";
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "btn category";
+    btn.innerText = cat.name;
+
+    btn.onclick = () => showWords(cat.key, cat.name);
+
+    app.appendChild(btn);
+  });
+}
+
+function showWords(catKey, title) {
+ app.innerHTML = "";
+
+  const back = document.createElement("button");
+  back.className = "btn";
+  back.id = "backBtn";
+  back.innerText = "← Back";
+  back.onclick = showCategories;
+
+  app.appendChild(back);
+
+  const h = document.createElement("h2");
+  h.innerText = title;
+  app.appendChild(h);
+
+  const items = data.filter(d => d.cat === catKey);
+
+  items.forEach(item => {
+    const container = document.createElement("div");
+    container.className = "btn word";
+
+    container.innerHTML = `
+      <div><b>${item.en}</b></div>
+      <div>${item.cn || ""}</div>
+      <div>${item.th}</div>
+      <div>${item.pn}</div>
+      
+    `;
+
+    const audio = document.createElement("audio");
+    audio.src = "MP3/" + item.audio;
+    audio.controls = true;
+    audio.style.width = "20%";
+    audio.style.marginTop = "10px";
+
+    container.appendChild(audio);
+
+    app.appendChild(container);
+  });
+
+    app.appendChild(btn);
+}
+
+showCategories();
+</script>
+
+</body>
+</html>
